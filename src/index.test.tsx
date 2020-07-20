@@ -1,17 +1,12 @@
-import {
-  render,
-  fireEvent,
-  waitForDomChange,
-  wait
-} from '@testing-library/react'
+import { render, fireEvent, wait } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 
 import * as React from 'react'
-import CurrentLocationControl, { CurrentLocationControlProps } from './index'
+import CurrentLocationControl from './index'
 import { Map, useLeaflet } from 'react-leaflet'
 import { Control, LatLng } from 'leaflet'
 
-const TestSetup = (props?: CurrentLocationControlProps) => {
+const TestSetup = (props?: any) => {
   return render(
     <Map>
       <CurrentLocationControl position='topright' {...props} />
@@ -22,6 +17,7 @@ const TestSetup = (props?: CurrentLocationControlProps) => {
 const GeoLocationMock = (errorOrSuccess: boolean | undefined) => {
   const watches: any[] = []
 
+  // @ts-ignore
   window.navigator.geolocation = {
     watchPosition: () => {},
     clearWatch: () => {}

@@ -32,7 +32,6 @@ export interface CurrentLocationControlProps {
   onPositionStop?: () => void
   onGeoLocationError?: PositionErrorCallback
   locationRef?: React.MutableRefObject<LatLng>
-  customLocationControl?: React.Component<ControlBodyProps>
 }
 
 export default function CurrentLocationControl({
