@@ -13,16 +13,16 @@ npm install --save react-leaflet-current-location-control
 ## Usage
 
 ```tsx
-import React, { Component } from 'react'
+import * as React from 'react'
 
-import MyComponent from 'react-leaflet-current-location-control'
-import 'react-leaflet-current-location-control/dist/index.css'
+import CurrentLocationControl from 'react-leaflet-current-location-control'
+import {Map} from 'react-leaflet'
 
-class Example extends Component {
-  render() {
-    return <MyComponent />
-  }
-}
+const App: React.FC<> = () => (
+  <Map>
+    <CurrentLocationControl postition="topright" />
+  </Map>
+)
 ```
 
 ## License
