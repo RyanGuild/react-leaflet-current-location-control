@@ -124,6 +124,7 @@ export type ControlButtonProps = {
 function ControlButton({ active, onClick }: ControlButtonProps): JSX.Element {
   return ReactDom.createPortal(
     <button
+      className='leaflet-control'
       data-testid='current-location-control-button'
       onClick={onClick}
       about='enable current location indicator'
