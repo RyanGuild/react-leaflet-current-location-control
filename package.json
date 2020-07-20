@@ -14,7 +14,8 @@
   "scripts": {
     "build": "rollup -c",
     "test": "cross-env CI=1 react-scripts test --env=jsdom",
-    "test:watch": "react-scripts test --env=jsdom"
+    "test:watch": "react-scripts test --env=jsdom",
+    "prebuild": "tsc --jsx preserve --declaration --declarationDir ./dist --outDir temp ./src/index.tsx "
   },
   "peerDependencies": {
     "react": "^16.0.0",
