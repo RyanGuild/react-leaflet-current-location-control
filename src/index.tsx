@@ -124,10 +124,10 @@ export type ControlButtonProps = {
 function ControlButton({ active, onClick }: ControlButtonProps): JSX.Element {
   return ReactDom.createPortal(
     <button
-      className='leaflet-control leaflet-control-layers'
       style={{
         border: 'none',
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        borderRadius: '5px'
       }}
       data-testid='current-location-control-button'
       onClick={onClick}
