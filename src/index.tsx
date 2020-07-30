@@ -1,9 +1,9 @@
-import * as React from 'react'
-import * as ReactDom from 'react-dom'
-import { useEffect, useState } from 'react'
-import { useLeaflet, Marker } from 'react-leaflet'
 // eslint-disable-next-line no-unused-vars
-import { Control, LatLng, Icon, LatLngExpression } from 'leaflet'
+import { Control, Icon, LatLng, LatLngExpression } from 'leaflet'
+import * as React from 'react'
+import { useEffect, useState } from 'react'
+import * as ReactDom from 'react-dom'
+import { Marker, useLeaflet } from 'react-leaflet'
 
 export const LocationOffIcon =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAvUlEQVR4Ab3TgQbCUBSH8RDCAEMYwkUIEAJEDxD2ACFAgB4ghDBc9Bh7gBB6gB5igB5hGE5fwHE5zmL28cOFP9vuJmO1wQF7FHDLcFLnBV6QRI0cZjt0iPh1hRgaZDArk7EIMdxhR0cIojoHrPBWQy1mMNtC1JiuhCgBZmuIMXaBKIX39VpjTH+AD9xqiDEWkzP578kaqxDQq4cz1ruAdqixs3ERO2fMfcRb8gdU6F2OBk9Mk8uJ/1pijnH6AqQ0XilSkNlRAAAAAElFTkSuQmCC'
@@ -124,7 +124,11 @@ export type ControlButtonProps = {
 function ControlButton({ active, onClick }: ControlButtonProps): JSX.Element {
   return ReactDom.createPortal(
     <button
-      className='leaflet-control'
+      className='leaflet-control leaflet-control-layers'
+      style={{
+        border: 'none',
+        backgroundColor: '#fff'
+      }}
       data-testid='current-location-control-button'
       onClick={onClick}
       about='enable current location indicator'
