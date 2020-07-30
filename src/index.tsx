@@ -128,7 +128,8 @@ function ControlButton({ active, onClick }: ControlButtonProps): JSX.Element {
         border: 'none',
         backgroundColor: '#fff',
         borderRadius: '5px',
-        margin: 0
+        margin: 0,
+        boxShadow: '0 1px 5px rgba(0, 0, 0, 0.4)'
       }}
       data-testid='current-location-control-button'
       onClick={onClick}
