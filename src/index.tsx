@@ -1,9 +1,9 @@
 // eslint-disable-next-line no-unused-vars
-import { Control, Icon, LatLng, LatLngExpression } from 'leaflet'
+import { Control, Icon, LatLng, LatLngBounds, LatLngExpression } from 'leaflet'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import * as ReactDom from 'react-dom'
-import { Marker, useLeaflet } from 'react-leaflet'
+import { ImageOverlay, Marker, useLeaflet } from 'react-leaflet'
 
 export const LocationOffIcon =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAvUlEQVR4Ab3TgQbCUBSH8RDCAEMYwkUIEAJEDxD2ACFAgB4ghDBc9Bh7gBB6gB5igB5hGE5fwHE5zmL28cOFP9vuJmO1wQF7FHDLcFLnBV6QRI0cZjt0iPh1hRgaZDArk7EIMdxhR0cIojoHrPBWQy1mMNtC1JiuhCgBZmuIMXaBKIX39VpjTH+AD9xqiDEWkzP578kaqxDQq4cz1ruAdqixs3ERO2fMfcRb8gdU6F2OBk9Mk8uJ/1pijnH6AqQ0XilSkNlRAAAAAElFTkSuQmCC'
@@ -16,12 +16,40 @@ export const LocationIndicator = new Icon({
   iconAnchor: [50, 50]
 })
 
+export const LocationIndicatorCenter = new Icon({
+  iconUrl:
+    'data:image/svg+xml;base64,PHN2Zz4KICAgIDxjaXJjbGUgaWQ9ImU2NW14eDBmdXRlMjQiIHI9IjEwIiB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDI1MCAyNTApIiBmaWxsPSJyZ2JhKDY5LDE3OSwyNTEsMC4yNikiIHN0cm9rZT0icmdiKDMsNzEsMjU1KSIgc3Ryb2tlLXdpZHRoPSI0Ii8+Cjwvc3ZnPg==',
+  iconSize: [100, 100],
+  iconAnchor: [50, 50]
+})
+
+export const LocationIndicatorAccUri =
+  'data:image/svg+xml;base64,PCEtLSBDb252ZXJ0ZWQgdG8gYmFzZTY0IGFuZCBzZXJ2ZWQgYXMganMgc3RyaW5nIGluc2lkZSBvZiBtb2R1bGUtLT4NCjxzdmcgd2lkdGg9IjEwMHB4IiBoZWlnaHQ9IjEwMHB4IiBpZD0iZTY1bXh4MGZ1dGUyMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmlld0JveD0iMCAwIDUwMCA1MDAiIHNoYXBlLXJlbmRlcmluZz0iZ2VvbWV0cmljUHJlY2lzaW9uIiB0ZXh0LXJlbmRlcmluZz0iZ2VvbWV0cmljUHJlY2lzaW9uIj4NCiAgICA8c3R5bGU+DQogICAgICAgICNlNjVteHgwZnV0ZTIyIHsNCiAgICAgICAgICAgIGFuaW1hdGlvbjogZTY1bXh4MGZ1dGUyMl9fcmQgMTAwMDBtcyBsaW5lYXIgMSBub3JtYWwgZm9yd2FyZHMNCiAgICAgICAgfQ0KICAgICAgICBAa2V5ZnJhbWVzIGU2NW14eDBmdXRlMjJfX3JkIHsgDQogICAgICAgICAgICAwJSB7cjogMTBweH0gDQogICAgICAgICAgICA1JSB7cjogMjEwcHh9IA0KICAgICAgICAgICAgMTAwJSB7cjogMjEwcHh9IA0KICAgICAgICB9DQogICAgICAgICNlNjVteHgwZnV0ZTIzIHsNCiAgICAgICAgICAgIGFuaW1hdGlvbjogZTY1bXh4MGZ1dGUyM19fcmQ7DQogICAgICAgICAgICBhbmltYXRpb24tZHVyYXRpb246IDIwMDBtczsNCiAgICAgICAgICAgIGFuaW1hdGlvbi1maWxsLW1vZGU6IGJvdGg7DQogICAgICAgICAgICBhbmltYXRpb24taXRlcmF0aW9uLWNvdW50OiBpbmZpbml0ZTsNCiAgICAgICAgfQ0KICAgICAgICBAa2V5ZnJhbWVzIGU2NW14eDBmdXRlMjNfX3JkIHsgDQogICAgICAgICAgICAwJSB7cjogMTBweH0NCiAgICAgICAgICAgIDQ1JSB7cjogMjA1cHh9DQogICAgICAgICAgICAxMDAlIHtyOjEwcHh9IA0KICAgICAgICB9DQogICAgPC9zdHlsZT4NCiAgICA8ZGVmcz4NCiAgICAgICAgPGZpbHRlciBpZD0iZTY1bXh4MGZ1dGUyMy1maWx0ZXIiIHg9Ii00MDAlIiB3aWR0aD0iNjAwJSIgeT0iLTQwMCUiIGhlaWdodD0iNjAwJSI+DQogICAgICAgICAgICA8ZmVHYXVzc2lhbkJsdXIgaWQ9ImU2NW14eDBmdXRlMjMtZmlsdGVyLWJsdXItMCIgc3RkRGV2aWF0aW9uPSIxMCwxMCIgcmVzdWx0PSJyZXN1bHQiLz4NCiAgICAgICAgPC9maWx0ZXI+DQogICAgPC9kZWZzPg0KICAgIDxjaXJjbGUgaWQ9ImU2NW14eDBmdXRlMjIiIHI9IjEwIiB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDI1MCAyNTApIiBmaWxsPSJyZ2JhKDY5LDE3OSwyNTEsMCkiIHN0cm9rZT0icmdiKDMsNzEsMjU1KSIgc3Ryb2tlLXdpZHRoPSI0Ii8+DQogICAgPGNpcmNsZSBpZD0iZTY1bXh4MGZ1dGUyMyIgcj0iMTAiIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMjUwIDI1MCkiIGZpbHRlcj0idXJsKCNlNjVteHgwZnV0ZTIzLWZpbHRlcikiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiKDI1NSwyNTUsMjU1KSIgc3Ryb2tlLXdpZHRoPSI0Ii8+DQo8L3N2Zz4='
+
 const controlRoot = document.createElement('div')
 controlRoot.setAttribute('data-testid', 'current-location-control-root')
 
 const isDev = process.env.NODE_ENV === 'development'
 const devLocationErrorMessage =
   '\r\nThis alert will show in production unless the onGeoLocationError prop is configured.'
+
+function metersToLat(m: number): number {
+  return m / 111111
+}
+
+function metersToLng(m: number, lat: number): number {
+  return m / (111111 * Math.cos(lat))
+}
+
+function userLocationToBounds(userLocation: LatLng, acc: number): LatLngBounds {
+  const { lat, lng } = userLocation
+  const offsetY = metersToLat(acc)
+  const offsetX = metersToLng(acc, lat)
+  return new LatLngBounds(
+    [lat - offsetY, lng - offsetX],
+    [lat + offsetY, lng + offsetX]
+  )
+}
 
 export interface CurrentLocationControlProps {
   position: 'topright' | 'topleft' | 'bottomleft' | 'bottomright'
@@ -48,6 +76,7 @@ export default function CurrentLocationControl({
   const [active, setActive] = useState(false)
   const [locationWatchId, setLocationWatchID] = useState(0)
   const [userLocation, setUserLocation] = useState<LatLng>()
+  const [locationAcc, setLocationAcc] = useState(0)
   const [controlContainerReady, setControlContainerReady] = useState(false)
   const OnClick = () => {
     if (!active) {
@@ -55,11 +84,12 @@ export default function CurrentLocationControl({
       try {
         const watchID = window.navigator.geolocation.watchPosition(
           (position) => {
-            const { latitude, longitude } = position.coords
+            const { latitude, longitude, accuracy } = position.coords
             const nextPos = new LatLng(latitude, longitude)
             if (onPosition) onPosition(position)
             if (locationRef) locationRef.current = nextPos
             setUserLocation(nextPos)
+            setLocationAcc(accuracy)
           },
           (error) => {
             onGeoLocationError
@@ -105,12 +135,19 @@ export default function CurrentLocationControl({
         <ControlButton active={active} onClick={OnClick} />
       ) : null}
       {active && userLocation ? (
-        <Marker
-          position={userLocation as LatLngExpression}
-          draggable={false}
-          icon={icon || LocationIndicator}
-          data-testid='current-location-indicator'
-        />
+        <>
+          <Marker
+            position={userLocation as LatLngExpression}
+            draggable={false}
+            icon={icon || LocationIndicatorCenter}
+            data-testid='current-location-indicator'
+          />
+          <ImageOverlay
+            url={LocationIndicatorAccUri}
+            interactive={false}
+            bounds={userLocationToBounds(userLocation, locationAcc)}
+          />
+        </>
       ) : null}
     </>
   )
