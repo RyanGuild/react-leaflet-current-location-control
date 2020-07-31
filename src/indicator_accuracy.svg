@@ -26,6 +26,6 @@
             <feGaussianBlur id="e65mxx0fute23-filter-blur-0" stdDeviation="10,10" result="result"/>
         </filter>
     </defs>
-    <circle id="e65mxx0fute22" r="10" transform="matrix(1 0 0 1 250 250)" fill="rgba(69,179,251,0)" stroke="rgb(3,71,255)" stroke-width="4"/>
+    <circle id="e65mxx0fute22" r="10" transform="matrix(1 0 0 1 250 250)" fill="rgba(69,179,251,0)" stroke="rgb(3,71,255)" stroke-width="1"/>
     <circle id="e65mxx0fute23" r="10" transform="matrix(1 0 0 1 250 250)" filter="url(#e65mxx0fute23-filter)" fill="none" stroke="rgb(255,255,255)" stroke-width="4"/>
 </svg>
